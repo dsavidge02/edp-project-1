@@ -1,3 +1,5 @@
+// sample comment
+
 let nameH1;
 let birthYearSpan;
 let heightSpan;
