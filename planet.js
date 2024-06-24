@@ -12,7 +12,7 @@ let charsUl;
 const baseUrl = `https://swapi2.azurewebsites.net/api`;
 
 addEventListener("DOMContentLoaded", () => {
-  nameH1 = document.querySelector("h1#name");
+  nameH1 = document.querySelector("h1#planet");
   climateSpan = document.querySelector("span#climate");
   surfaceWaterSpan = document.querySelector("span#surface_water");
   diameterSpan = document.querySelector("span#diameter");
@@ -22,7 +22,7 @@ addEventListener("DOMContentLoaded", () => {
   gravitySpan = document.querySelector("span#gravity");
   populationSpan = document.querySelector("span#population");
   filmsUl = document.querySelector("#films>ul");
-  charsUl = document.querySelector("#characters>ul"); // MUST RENAME
+  charsUl = document.querySelector("#characters>ul");
 
   const sp = new URLSearchParams(window.location.search);
   const id = sp.get("id");
@@ -33,17 +33,17 @@ async function getPlanet(id) {
   let planet;
   try {
     planet = await fetchPlanet(id);
-    console.log(planet);
+    console.log(planet.name);
     planet.characters = await fetchCharacter(id);
     planet.films = await fetchFilms(id);
   } catch (ex) {
     console.error(`Error reading character ${id} data.`, ex.message);
   }
-  renderCharacter(character);
+  renderPlanet(planet);
 }
 async function fetchPlanet(id) {
-  const url = `${baseUrl}/planets/${id}`;
-  const planet = await fetch(url).then((res) => res.json());
+  let url = `${baseUrl}/planets/${id}`;
+  let planet = await fetch(url).then((res) => res.json());
   return planet;
 }
 
@@ -62,14 +62,14 @@ async function fetchFilms(id) {
 const renderPlanet = (planet) => {
   document.title = `SWAPI - ${planet?.name}`; // Just to make the browser tab say their name
   nameH1.textContent = planet?.name;
-  climateSpan.textContent = character?.climate;
-  surfaceWaterSpan.textContent = character?.surface_water;
-  diameterSpan.textContent = character?.diameter;
-  rotationPeriodSpan.textContent = character?.rotation_period;
-  orbitalPeriodSpan.textContent = character?.orbital_period;
-  terrainSpan.textContent = character?.terrain;
-  gravitySpan.textContent = character?.gravity;
-  populationSpan.textContent = character?.population;
+  climateSpan.textContent = planet?.climate;
+  surfaceWaterSpan.textContent = planet?.surface_water;
+  diameterSpan.textContent = planet?.diameter;
+  rotationPeriodSpan.textContent = planet?.rotation_period;
+  orbitalPeriodSpan.textContent = planet?.orbital_period;
+  terrainSpan.textContent = planet?.terrain;
+  gravitySpan.textContent = planet?.gravity;
+  populationSpan.textContent = planet?.population;
 
   const filmsLis = planet?.films?.map(
     (film) => `<li><a href="/film.html?id=${film.id}">${film.title}</li>`
@@ -77,7 +77,7 @@ const renderPlanet = (planet) => {
   filmsUl.innerHTML = filmsLis.join("");
 
   const charsLis = planet?.characters?.map(
-    (chars) => `<li><a href="/film.html?id=${chars.id}">${chars.name}</li>`
+    (chars) => `<li><a href="/character.html?id=${chars.id}">${chars.name}</li>`
   );
   charsUl.innerHTML = charsLis.join("");
 };
